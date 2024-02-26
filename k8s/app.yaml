@@ -1,0 +1,116 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hello-k8s-configmap
+data:
+  configuration.json: |-
+    {"rest": {
+      "host": "localhost",
+      "port": 80,
+      "basePath": "/api"
+      },
+      "db": {
+        "enabled": true,
+        "host": "shared-postgres-db.kube-public",
+        "port": 5432,
+        "user": "user",
+        "password": "password",
+        "name": "pg-shared",
+        "key": "docker-k8s-training-visitor-count"
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: hello-k8s
+  name: hello-k8s-deployment
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      service: hello-k8s
+  template:
+    metadata:
+      labels:
+        service: hello-k8s
+    spec:
+      containers:
+        - command: ["/go/bin/hello"]
+          args: ["--config", "/go/config/configuration.json"]
+          image: hello:k8s
+          imagePullPolicy: IfNotPresent
+          name: hello-k8s-container
+          resources:
+            requests:
+              cpu: 5m
+              memory: 40Mi
+            limits:
+              cpu: 5m
+              memory: 40Mi
+          volumeMounts:
+            - mountPath: /go/config/
+              name: config
+      restartPolicy: Always
+      volumes:
+        - name: config
+          configMap:
+            name: hello-k8s-configmap
+            items:
+              - key: configuration.json
+                path: configuration.json
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: hello-k8s
+  name: hello-k8s-service
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    name: http
+  selector:
+    service: hello-k8s
+  type:
+    ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    service: hello-k8s-node-port
+  name: hello-k8s-service-node-port
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30001
+    name: http
+  selector:
+    service: hello-k8s
+  type:
+    NodePort
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hello-k8s-reverse-proxy
+spec:
+  rules:
+  - host:
+    http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: hello-k8s-service
+            port: 
+              number: 80
+---

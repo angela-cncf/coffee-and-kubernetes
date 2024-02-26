@@ -1,0 +1,21 @@
+# Local app
+@host=http://localhost:8080
+
+# Docker app
+# @host=http://localhost:30080
+
+# Node port K8s app
+# @host=http://localhost:30001/api
+
+# Ingress K8s app
+# @host=http://localhost/api
+
+
+### Call the hello API
+GET {{host}}/hello
+
+### Call another API
+GET {{host}}/howdy
+
+### Call another API
+GET {{host}}/attack
