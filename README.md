@@ -23,15 +23,15 @@ You can build and run the app as a container with **any** runtime that conforms 
 
 ### Running the K8s app
 
-To play with the app in `Kubernetes` you'll clearly need `Kuebernetes`. The demo uses [`Rancher for Desktop`](https://github.com/rancher-sandbox/rancher-desktop/releases/tag/v1.9.1) which provides both `Docker` and `K8s` in an easy to use package. Stick to this recommendation if it's your first time playing with these technologies.
+To play with the app in `Kubernetes` you'll clearly need `Kubernetes`. The demo uses [`Rancher for Desktop`](https://github.com/rancher-sandbox/rancher-desktop/releases/tag/v1.9.1) which provides both `Docker` and `K8s` in an easy to use package. Stick to this recommendation if it's your first time playing with these technologies.
 
 To interact with K8s, the standard option is to use the [`kubectl`](https://kubernetes.io/docs/tasks/tools/#kubectl) command. You'll need to install it and make sure it points to Rancher's cluster before you can use the `make` helpers related to K8s.
 
 ### Extras
 
-A nice CLI tool for interacting with K8s is [`K9s`](https://github.com/derailed/k9s/releases). This is a primary tool for the K8s demos but remember that it is just a nice wrapper fro `kubectl` and doesn't provide additional functionality.
+A nice CLI tool for interacting with K8s is [`K9s`](https://github.com/derailed/k9s/releases). This is a primary tool for the K8s demos but remember that it is just a nice wrapper for `kubectl` and doesn't provide additional functionality.
 
-As a final note, keep in mind that K8s and containers are primarily Linux-based environments. It's a good idea to get friendly with the commandline, scripting and Linux OS internals. The more familiar you are with these topics the easier it will be for you to understand what is going on and to dive deeper into the concepts.
+As a final note, keep in mind that K8s and containers live primarily in Linux-based environments. It's a good idea to get friendly with the commandline, scripting and Linux OS internals. The more familiar you are with these topics the easier it will be for you to understand what is going on and to dive deeper into the concepts.
 
 ## How to use
 
@@ -75,9 +75,9 @@ Read about [chaos engineering](https://en.wikipedia.org/wiki/Chaos_engineering) 
 
 We've included a poor man's chaos monkey which you can let loose in your cluster with `make chaos` and turn off with `make order`. It has its own container image, built using [chaos.Dockerfile](docker/chaos.Dockerfile) and if you're curious you can take a look at [the script](k8s/chaos.sh) that does the monkeying around. Notice that the script references a couple of ENV VARS that have fallback default values. This will come in handy later.
 
-The monkey is unleashed via the K8s YAML definition found [here](k8s/chaos.yaml). In addition to a `deployment` we have a lot of permission related resources and no service or other means of exposing the functionality to the outside. Read about them in the [K8s API reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#api-overview).
+The monkey is unleashed via the K8s YAML definition found [here](k8s/chaos.yaml). In addition to a `deployment` we have a lot of permission related resources and no service or other means of exposing the functionality to the outside. Read about them in the [K8s API reference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.28/#cluster-apis).
 
-Play with your app while the chaos monkey does its thing. Can you see any differences in its behavior? Monitor the pods in your cluster and see how they behave? Which ones are being affected by our monkey? Can you make others be affected as well?
+Play with your app while the chaos monkey does its thing. Can you see any differences in its behavior? Monitor the pods in your cluster and see how they behave. Which ones are being affected by our monkey? Can you expand the monkey's reach to others?
 
 ## Additional reading and research topics 📚🐛
 
@@ -104,7 +104,7 @@ You can use the following lists of reading and research topics as a further **in
     - [k3s](https://k3s.io/) - lightweight K8s for IoT
     - [kind](https://kind.sigs.k8s.io/) - lightweight local K8s with [Docker](https://www.docker.com/) or [podman](https://podman.io/)
     - [k3d](https://k3d.io/v5.6.0/) - lightweight k3s wrapper by Rancher
-    - [microk8s](https://microk8s.io/) - turnkey, high availability K8s from Canonical
+    - [microk8s](https://microk8s.io/) - high availability K8s from Canonical
     - [K8s playground](https://labs.play-with-k8s.com/) - temporary tiny clusters in the cloud
 
 5. K8s resources
@@ -113,3 +113,5 @@ You can use the following lists of reading and research topics as a further **in
     - [Horizntal pod autoscaling](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) documentation
     - [Operator Framework](https://sdk.operatorframework.io/)
     - [Controller Pattern](https://kubernetes.io/docs/concepts/architecture/controller/)
+
+> Final note: Additional questions can also be addressed to [ysm4givye@mozmail.com](mailto:ysm4givye@mozmail.com) for the next month or so.
